@@ -1,0 +1,17 @@
+version: "0.1"
+global:
+  setup:
+    - yarn install
+pipeline:
+  runTest:
+    exec:
+      - npx vitest run --coverage=false {{testFilePath}}
+    post:
+      # 用户在配置的时候，是否也可能会遇到这个坑
+      - npx tsc --noEmit --pretty
+      - yarn lint
+      - yarn format
+settings:
+  testPlacementStrategies:
+    - type: co-located
+      testFilePattern: "{{sourceFileName}}.spec.ts"
